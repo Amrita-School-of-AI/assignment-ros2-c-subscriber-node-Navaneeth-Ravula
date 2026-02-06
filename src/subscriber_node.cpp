@@ -21,11 +21,19 @@ public:
     SubscriberNode()
         : Node("subscriber_node")
     {
-        // TODO: Create the subscription here
+        // inside constructor
+        subscription_ = this->create_subscription<std_msgs::msg::String>(
+        "/chatter",
+        10,
+        std::bind(&SubscriberNode::topic_callback, this, _1)
+        );
     }
 
 private:
-    // TODO: Define the topic_callback function here
+    void topic_callback(const std_msgs::msg::String::SharedPtr msg)
+    {
+    RCLCPP_INFO(this->get_logger(), "I heard: '%s'", msg->data.c_str());
+    }
 
     rclcpp::Subscription<std_msgs::msg::String>::SharedPtr subscription_;
 };
